@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with product
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: product_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: product_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: product_name_uq
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: product_barcode_uq
+                  name: barcode
+                  type: VARCHAR(13)
+              - column:
+                  name: version
+                  type: INT
+      rollback:
+        - dropTable:
+            tableName: product
