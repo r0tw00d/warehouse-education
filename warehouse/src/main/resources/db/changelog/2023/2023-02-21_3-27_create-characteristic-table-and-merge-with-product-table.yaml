@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create characteristic_product table
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: product_characteristic
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: product_id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: characteristic_id
+                  type: BIGSERIAL
+      rollback:
+        - dropTable:
+            tableName: product_characteristic
+  - changeSet:
+      id: Create characteristic table
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: characteristic
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: characteristic_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: characteristic_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: value
+                  type: VARCHAR(255)
+              - column:
+                  name: version
+                  type: INT
+      rollback:
+        - dropTable:
+            tableName: characteristic

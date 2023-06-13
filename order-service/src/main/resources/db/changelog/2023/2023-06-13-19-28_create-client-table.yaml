@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with client
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: client
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: client_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: client_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price_type
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                    unique: true
+                  name: inn
+                  type: VARCHAR(255)
+              - column:
+                  name: version
+                  type: INT
+                  defaultValue: 0
+      rollback:
+        - dropTable:
+            tableName: client

@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with price history
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: price_history
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: price_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: price_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price_type
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: old_value
+                  type: DECIMAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: new_value
+                  type: DECIMAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: date_of_change
+                  type: TIMESTAMP
+              - column:
+                  name: version
+                  type: INT
+                  defaultValue: 0
+      rollback:
+        - dropTable:
+            tableName: price_history

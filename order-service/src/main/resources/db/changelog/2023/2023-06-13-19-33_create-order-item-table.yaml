@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with order item
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: order_item
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: order_item_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: order_item_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                    referencedTableName: order
+                    referencedColumnNames: id
+                    foreignKeyName: order_item_order_fk
+                    deleteCascade: true
+                  name: order_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price
+                  type: DECIMAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: DECIMAL
+              - column:
+                  name: version
+                  type: INT
+                  defaultValue: 0
+      rollback:
+        - dropTable:
+            tableName: order_item

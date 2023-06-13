@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/warehouse
+    url: jdbc:postgresql://localhost:5433/warehouse
     username: postgres
     password: 16071607
     driver-class-name: org.postgresql.Driver
@@ -11,4 +11,4 @@ spring:
   liquibase:
     change-log: classpath:changelog-master.yaml
 server:
-  port: 8089
+  port: 8085
