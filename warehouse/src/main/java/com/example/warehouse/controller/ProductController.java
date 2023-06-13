@@ -1,8 +1,9 @@
-package com.example.warehouseeducation.controller;
+package com.example.warehouse.controller;
 
-import com.example.warehouseeducation.domain.Product;
-import com.example.warehouseeducation.dto.ProductResponse;
-import com.example.warehouseeducation.service.ProductService;
+import com.example.warehouse.dto.ProductDto;
+import com.example.warehouse.domain.Product;
+import com.example.warehouse.dto.ProductResponse;
+import com.example.warehouse.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class ProductController {
 
     @ResponseStatus(CREATED)
     @PostMapping(value = "/create", consumes = APPLICATION_JSON_VALUE)
-    public void createProduct(@RequestBody Product product) {service.create(product);}
+    public void createProduct(@RequestBody ProductDto product) {service.create(product);}
 
     @ResponseStatus(OK)
     @PutMapping(value = "/id/{id}", consumes = APPLICATION_JSON_VALUE)
