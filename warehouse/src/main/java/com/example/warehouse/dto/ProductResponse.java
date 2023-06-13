@@ -1,6 +1,8 @@
-package com.example.warehouseeducation.dto;
+package com.example.warehouse.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public interface ProductResponse {
@@ -11,4 +13,5 @@ public interface ProductResponse {
 
     String getBarcode();
 
+    Set<CharacteristicResponse> getCharacteristics();
 }
