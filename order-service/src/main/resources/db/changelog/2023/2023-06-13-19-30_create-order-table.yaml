@@ -5,15 +5,15 @@ databaseChangeLog:
       context: dev or test
       changes:
         - createTable:
-            tableName: order
+            tableName: client_order
             columns:
               - column:
                   constraints:
                     primaryKey: true
-                    primaryKeyName: order_pk
+                    primaryKeyName: client_order_pk
                     nullable: false
                     unique: true
-                    uniqueConstraintName: order_id_uq
+                    uniqueConstraintName: client_order_id_uq
                   name: id
                   type: BIGSERIAL
               - column:
@@ -41,4 +41,4 @@ databaseChangeLog:
                   defaultValue: 0
       rollback:
         - dropTable:
-            tableName: order
+            tableName: client_order

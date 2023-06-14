@@ -1,11 +1,9 @@
 package com.example.orderservice.domain;
 
-import com.example.pricedto.price.PriceType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @ToString
-@Table(name = "order")
-public class Order {
+@Table(name = "client_order")
+public class ClientOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,16 +37,16 @@ public class Order {
     @Version
     private Integer version;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clientOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     public void addOrderItem(OrderItem orderItem) {
-        orderItem.setOrder(this);
+        orderItem.setClientOrder(this);
         this.orderItems.add(orderItem);
     }
 
     public void removeOrderItem(OrderItem orderItem) {
-        orderItem.setOrder(null);
+        orderItem.setClientOrder(null);
         this.orderItems.remove(orderItem);
     }
 
@@ -57,7 +55,7 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Order order = (Order) o;
+        ClientOrder order = (ClientOrder) o;
 
         if (supplier != null ? !supplier.equals(order.supplier) : order.supplier != null) return false;
         if (client != null ? !client.equals(order.client) : order.client != null) return false;

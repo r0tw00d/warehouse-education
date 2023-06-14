@@ -10,7 +10,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query("select o " +
             "from OrderItem o " +
-            "where o.order.id = :id")
+            "where o.clientOrder.id = :id")
     List<OrderItem> fetchAllByOrderId(Long id);
 
 }

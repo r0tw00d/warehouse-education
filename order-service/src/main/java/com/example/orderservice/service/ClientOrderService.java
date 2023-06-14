@@ -1,19 +1,17 @@
 package com.example.orderservice.service;
 
-import com.example.orderservice.domain.Order;
+import com.example.orderservice.domain.ClientOrder;
 import com.example.orderservice.domain.OrderItem;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface OrderService {
+public interface ClientOrderService {
 
-    void create(Long clientId, Order order);
+    void create(Long clientId, ClientOrder order);
 
-    Order findById(Long id);
+    ClientOrder findById(Long id);
 
-    void updateById(Long id, Order order);
+    void updateById(Long id, ClientOrder order);
 
     void deleteById(Long id);
 
