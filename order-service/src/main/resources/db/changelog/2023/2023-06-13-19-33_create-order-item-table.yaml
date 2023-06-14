@@ -19,11 +19,11 @@ databaseChangeLog:
               - column:
                   constraints:
                     nullable: false
-                    referencedTableName: order
+                    referencedTableName: client_order
                     referencedColumnNames: id
-                    foreignKeyName: order_item_order_fk
+                    foreignKeyName: order_item_client_order_fk
                     deleteCascade: true
-                  name: order_id
+                  name: client_order_id
                   type: BIGINT
               - column:
                   constraints:

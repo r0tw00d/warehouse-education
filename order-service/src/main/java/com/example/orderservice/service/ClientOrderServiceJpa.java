@@ -1,8 +1,8 @@
 package com.example.orderservice.service;
 
-import com.example.orderservice.domain.Order;
+import com.example.orderservice.domain.ClientOrder;
 import com.example.orderservice.domain.OrderItem;
-import com.example.orderservice.repository.OrderRepository;
+import com.example.orderservice.repository.ClientOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class OrderServiceJpa implements OrderService {
+public class ClientOrderServiceJpa implements ClientOrderService {
 
-    private final OrderRepository repository;
+    private final ClientOrderRepository repository;
 
     private final OrderItemService orderItemService;
 
@@ -28,30 +28,30 @@ public class OrderServiceJpa implements OrderService {
 
     @Transactional
     @Override
-    public void create(Long clientId, Order order) {
-        order.setClient(clientService.findById(clientId));
-        order.setOrderItems(setPriceForOrderItems(order));
-        repository.save(order);
+    public void create(Long clientId, ClientOrder clientOrder) {
+        clientOrder.setClient(clientService.findById(clientId));
+        clientOrder.setOrderItems(setPriceForOrderItems(clientOrder));
+        repository.save(clientOrder);
     }
 
-    private List<OrderItem> setPriceForOrderItems(Order order) {
-        var orderItems = order.getOrderItems();
+    private List<OrderItem> setPriceForOrderItems(ClientOrder clientOrder) {
+        var orderItems = clientOrder.getOrderItems();
         orderItems.stream()
-                .forEach(e -> e.setPrice(priceService.getPriceByProductIdAndPriceType(e.getProductId(), order.getClient().getPriceType())));
+                .forEach(e -> e.setPrice(priceService.getPriceByProductIdAndPriceType(e.getProductId(), clientOrder.getClient().getPriceType())));
         return orderItems;
     }
 
     @Override
-    public Order findById(Long id) {
+    public ClientOrder findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException());
     }
 
     @Transactional
     @Override
-    public void updateById(Long id, Order order) {
+    public void updateById(Long id, ClientOrder clientOrder) {
         var fromDb = findById(id);
-        BeanUtils.copyProperties(order, fromDb, "id");
+        BeanUtils.copyProperties(clientOrder, fromDb, "id");
     }
 
     @Transactional

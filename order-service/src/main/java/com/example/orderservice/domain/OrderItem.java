@@ -1,14 +1,10 @@
 package com.example.orderservice.domain;
 
-import com.example.pricedto.price.PriceType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @Setter
@@ -27,8 +23,8 @@ public class OrderItem {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @JoinColumn(name = "client_order_id")
+    private ClientOrder clientOrder;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;

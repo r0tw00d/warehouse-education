@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface OrderItemService {
 
-    void create(OrderItem characteristic);
+    void create(OrderItem orderItem);
 
     List<OrderItem> getAllById(long id);
 
