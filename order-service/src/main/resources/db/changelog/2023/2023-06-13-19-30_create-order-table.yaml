@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with order
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: order
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: order_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: order_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: supplier
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                    referencedTableName: client
+                    referencedColumnNames: id
+                    foreignKeyName: client_order_fk
+                    deleteCascade: true
+                  name: client_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: date
+                  type: TIMESTAMP
+              - column:
+                  name: version
+                  type: INT
+                  defaultValue: 0
+      rollback:
+        - dropTable:
+            tableName: order

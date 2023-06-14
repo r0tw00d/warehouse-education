@@ -1,0 +1,8 @@
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @warehouse-connector.json
+
+$headers = @{
+    "Accept" = "application/json"
+    "Content-Type" = "application/json"
+}
+$body = Get-Content -Raw -Path warehouse-connector.json
+Invoke-WebRequest -Uri http://localhost:8083/connectors/ -Headers $headers -Method POST -Body $body

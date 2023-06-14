@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with prices
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: price
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: price_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: price_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price_type
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                    referencedTableName: product
+                    referencedColumnNames: id
+                    foreignKeyName: characteristic_product_fk
+                    deleteCascade: true
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: value
+                  type: DECIMAL
+              - column:
+                  name: version
+                  type: INT
+                  defaultValue: 0
+      rollback:
+        - dropTable:
+            tableName: price
+
+  - changeSet:
+      id: Create unique constraint for columns (product_id, price_type)
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - addUniqueConstraint:
+            columnNames: product_id, price_type
+            constraintName: price_id_price_type_uq
+            tableName: price
+      rollback:
+        - dropUniqueConstraint:
+            tableName: price
+            constraintName: price_id_price_type_uq

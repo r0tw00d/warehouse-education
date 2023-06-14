@@ -1,0 +1,17 @@
+{
+  "name": "warehouse-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "pgoutput",
+    "database.hostname": "warehouse_db",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "16071607",
+    "database.dbname" : "warehouse",
+    "database.server.name": "warehouse",
+    "table.include.list": "public.price_outbox",
+    "heartbeat.interval.ms": "5000",
+    "skipped.operations": "u,d,t",
+    "topic.prefix": "price"
+  }
+}
