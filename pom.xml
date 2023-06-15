@@ -20,6 +20,7 @@
         <module>price-dto</module>
         <module>order-service</module>
         <module>order-dto</module>
+        <module>order-notification</module>
     </modules>
     <properties>
         <java.version>17</java.version>
