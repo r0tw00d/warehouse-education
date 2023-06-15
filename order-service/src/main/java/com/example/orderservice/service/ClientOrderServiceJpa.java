@@ -1,5 +1,6 @@
 package com.example.orderservice.service;
 
+import com.example.orderdto.dto.OrderChangesPayload;
 import com.example.orderservice.domain.ClientOrder;
 import com.example.orderservice.domain.OrderItem;
 import com.example.orderservice.repository.ClientOrderRepository;
@@ -26,12 +27,20 @@ public class ClientOrderServiceJpa implements ClientOrderService {
 
     private final ClientService clientService;
 
+    private final OrderOutboxService orderOutboxService;
+
     @Transactional
     @Override
     public void create(Long clientId, ClientOrder clientOrder) {
         clientOrder.setClient(clientService.findById(clientId));
         clientOrder.setOrderItems(setPriceForOrderItems(clientOrder));
+        var orderChangesPayload = OrderChangesPayload.builder()
+                        .client(clientOrder.getClient().getName())
+                        .supplier(clientOrder.getSupplier())
+                        .date(clientOrder.getDate())
+                        .build();
         repository.save(clientOrder);
+        orderOutboxService.createPriceOutboxMessage(orderChangesPayload);
     }
 
     private List<OrderItem> setPriceForOrderItems(ClientOrder clientOrder) {
