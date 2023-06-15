@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with leftover
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: leftover
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: leftover_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: leftover_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                    referencedTableName: product
+                    referencedColumnNames: id
+                    foreignKeyName: leftover_product_fk
+                    unique: true
+                    deleteCascade: true
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: value
+                  type: DECIMAL
+              - column:
+                  name: version
+                  type: INT
+                  defaultValue: 0
+      rollback:
+        - dropTable:
+            tableName: leftover
