@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>order-notification</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>price-history</name>
+    <name>order-notification</name>
     <description>order-notification</description>
     <properties>
         <java.version>17</java.version>
