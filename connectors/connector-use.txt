@@ -4,5 +4,12 @@ $headers = @{
     "Accept" = "application/json"
     "Content-Type" = "application/json"
 }
-$body = Get-Content -Raw -Path warehouse-connector.json
+$body = Get-Content -Raw -Path connectors/warehouse-connector.json
+Invoke-WebRequest -Uri http://localhost:8083/connectors/ -Headers $headers -Method POST -Body $body
+
+$headers = @{
+    "Accept" = "application/json"
+    "Content-Type" = "application/json"
+}
+$body = Get-Content -Raw -Path connectors/order-connector.json
 Invoke-WebRequest -Uri http://localhost:8083/connectors/ -Headers $headers -Method POST -Body $body
