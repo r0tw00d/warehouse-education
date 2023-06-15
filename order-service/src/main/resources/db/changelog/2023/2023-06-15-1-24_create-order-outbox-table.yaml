@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create table with order_outbox
+      author: Alex Astrologov
+      context: dev or test
+      changes:
+        - createTable:
+            tableName: order_outbox
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: order_outbox_pk
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: order_outbox_id_uq
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: key
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: event_type
+                  type: VARCHAR(50)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: payload
+                  type: TEXT
+      rollback:
+        - dropTable:
+            tableName: order_outbox
