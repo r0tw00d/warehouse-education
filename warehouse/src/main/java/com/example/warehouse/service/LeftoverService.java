@@ -1,5 +1,6 @@
 package com.example.warehouse.service;
 
+import com.example.orderdto.dto.OrderItemChangesPayload;
 import com.example.warehouse.domain.Leftover;
 import com.example.warehouse.dto.LeftoverDto;
 
@@ -12,5 +13,7 @@ public interface LeftoverService {
     Leftover getByProductId(Long productId);
 
     BigDecimal getValueByProductId(Long productId);
+
+    void updateLeftover(OrderItemChangesPayload orderItemChangesPayload);
 
 }

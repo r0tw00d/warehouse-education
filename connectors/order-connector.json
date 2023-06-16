@@ -9,7 +9,7 @@
     "database.password": "16071607",
     "database.dbname" : "order",
     "database.server.name": "order",
-    "table.include.list": "public.order_outbox",
+    "table.include.list": "public.order_outbox, public.order_item_outbox",
     "heartbeat.interval.ms": "5000",
     "skipped.operations": "u,d,t",
     "topic.prefix": "order"

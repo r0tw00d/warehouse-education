@@ -1,13 +1,16 @@
 package com.example.warehouse.service;
 
+import com.example.orderdto.dto.OrderItemChangesPayload;
 import com.example.warehouse.domain.Leftover;
 import com.example.warehouse.domain.Product;
 import com.example.warehouse.dto.LeftoverDto;
 import com.example.warehouse.exception.ProductNotFoundException;
 import com.example.warehouse.repository.LeftoverRepository;
 import com.example.warehouse.repository.ProductRepository;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,13 @@ public class LeftoverServiceJpa implements LeftoverService {
     @Override
     public BigDecimal getValueByProductId(Long productId) {
         return repository.getValueByProductId(productId);
+    }
+
+    @Transactional
+    @Override
+    public void updateLeftover(OrderItemChangesPayload orderItemChangesPayload) {
+        var fromDb = repository.getByProductId(orderItemChangesPayload.getProductId());
+        fromDb.setValue(fromDb.getValue().subtract(orderItemChangesPayload.getQuantity()));
     }
 
     private Product findProductByProductId(Long productId) {

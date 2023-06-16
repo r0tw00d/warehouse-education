@@ -1,8 +1,10 @@
 package com.example.orderservice.service;
 
 import com.example.orderdto.dto.OrderChangesPayload;
+import com.example.orderdto.dto.OrderItemChangesPayload;
 import com.example.orderservice.domain.ClientOrder;
 import com.example.orderservice.domain.OrderItem;
+import com.example.orderservice.domain.OrderItemOutbox;
 import com.example.orderservice.exception.ProductLeftoverNotEnoughException;
 import com.example.orderservice.repository.ClientOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +34,8 @@ public class ClientOrderServiceJpa implements ClientOrderService {
 
     private final OrderOutboxService orderOutboxService;
 
+    private final OrderItemOutboxService orderItemOutboxService;
+
     @Transactional
     @Override
     public void create(Long clientId, ClientOrder clientOrder) {
@@ -45,10 +49,22 @@ public class ClientOrderServiceJpa implements ClientOrderService {
                         .date(clientOrder.getDate())
                         .build();
         repository.save(clientOrder);
-        orderOutboxService.createPriceOutboxMessage(orderChangesPayload);}
+        orderOutboxService.createOrderOutboxMessage(orderChangesPayload);
+        clientOrder.getOrderItems().stream()
+                        .map(e -> convertOrderItemToOrderItemOutboxMessage(e))
+                        .forEach(e -> orderItemOutboxService.createOrderItemOutboxMessage(e));
+        }
         else{
             throw new ProductLeftoverNotEnoughException("id", String.valueOf(notEnoughLeftoverProductId));
         }
+    }
+
+    private OrderItemChangesPayload convertOrderItemToOrderItemOutboxMessage(OrderItem orderItem) {
+        var orderItemOutboxMessage = OrderItemChangesPayload.builder()
+                .productId(orderItem.getProductId())
+                .quantity(orderItem.getQuantity())
+                .build();
+        return orderItemOutboxMessage;
     }
 
     private Set<Long> productLeftoverIsEnough(List<OrderItem> orderItems) {
