@@ -4,6 +4,8 @@ import com.example.pricedto.price.PriceType;
 
 import java.math.BigDecimal;
 
-public interface PriceService {
+public interface WarehouseService {
     public BigDecimal getPriceByProductIdAndPriceType(Long id, PriceType priceType);
+
+    public BigDecimal getLeftoverByProductId(Long productId);
 }

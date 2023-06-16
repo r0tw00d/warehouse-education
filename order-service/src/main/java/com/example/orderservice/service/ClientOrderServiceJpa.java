@@ -3,6 +3,7 @@ package com.example.orderservice.service;
 import com.example.orderdto.dto.OrderChangesPayload;
 import com.example.orderservice.domain.ClientOrder;
 import com.example.orderservice.domain.OrderItem;
+import com.example.orderservice.exception.ProductLeftoverNotEnoughException;
 import com.example.orderservice.repository.ClientOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,7 +26,7 @@ public class ClientOrderServiceJpa implements ClientOrderService {
 
     private final OrderItemService orderItemService;
 
-    private final PriceService priceService;
+    private final WarehouseService warehouseService;
 
     private final ClientService clientService;
 
@@ -32,6 +35,8 @@ public class ClientOrderServiceJpa implements ClientOrderService {
     @Transactional
     @Override
     public void create(Long clientId, ClientOrder clientOrder) {
+        var notEnoughLeftoverProductId = productLeftoverIsEnough(clientOrder.getOrderItems());
+        if (notEnoughLeftoverProductId.size() == 0){
         clientOrder.setClient(clientService.findById(clientId));
         clientOrder.setOrderItems(setPriceForOrderItems(clientOrder));
         var orderChangesPayload = OrderChangesPayload.builder()
@@ -40,13 +45,24 @@ public class ClientOrderServiceJpa implements ClientOrderService {
                         .date(clientOrder.getDate())
                         .build();
         repository.save(clientOrder);
-        orderOutboxService.createPriceOutboxMessage(orderChangesPayload);
+        orderOutboxService.createPriceOutboxMessage(orderChangesPayload);}
+        else{
+            throw new ProductLeftoverNotEnoughException("id", String.valueOf(notEnoughLeftoverProductId));
+        }
+    }
+
+    private Set<Long> productLeftoverIsEnough(List<OrderItem> orderItems) {
+        var productNotEnough = orderItems.stream()
+                .filter(e -> !checkLeftoverProductEnough(e))
+                .map(e -> e.getProductId())
+                .collect(Collectors.toSet());
+        return productNotEnough;
     }
 
     private List<OrderItem> setPriceForOrderItems(ClientOrder clientOrder) {
         var orderItems = clientOrder.getOrderItems();
         orderItems.stream()
-                .forEach(e -> e.setPrice(priceService.getPriceByProductIdAndPriceType(e.getProductId(), clientOrder.getClient().getPriceType())));
+                .forEach(e -> e.setPrice(warehouseService.getPriceByProductIdAndPriceType(e.getProductId(), clientOrder.getClient().getPriceType())));
         return orderItems;
     }
 
@@ -81,7 +97,7 @@ public class ClientOrderServiceJpa implements ClientOrderService {
         var order = findById(id);
         orderItems.stream()
                 .filter(e -> e.getId() == null)
-                .forEach(e -> e.setPrice(priceService.getPriceByProductIdAndPriceType(e.getProductId(), order.getClient().getPriceType())));
+                .forEach(e -> e.setPrice(warehouseService.getPriceByProductIdAndPriceType(e.getProductId(), order.getClient().getPriceType())));
         orderItems.forEach(order::addOrderItem);
     }
 
@@ -90,5 +106,10 @@ public class ClientOrderServiceJpa implements ClientOrderService {
     public void deleteAllOrderItems(Long id, List<OrderItem> orderItems) {
         var order = findById(id);
         orderItems.forEach(order::removeOrderItem);
+    }
+
+    private Boolean checkLeftoverProductEnough(OrderItem orderItem) {
+        var difference = warehouseService.getLeftoverByProductId(orderItem.getProductId()).compareTo(orderItem.getQuantity());
+        return difference != -1;
     }
 }
