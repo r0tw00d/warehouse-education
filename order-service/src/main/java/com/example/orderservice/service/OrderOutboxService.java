@@ -4,6 +4,6 @@ import com.example.orderdto.dto.OrderChangesPayload;
 
 public interface OrderOutboxService {
 
-    void createPriceOutboxMessage(OrderChangesPayload orderChangesPayload);
+    void createOrderOutboxMessage(OrderChangesPayload orderChangesPayload);
 
 }
