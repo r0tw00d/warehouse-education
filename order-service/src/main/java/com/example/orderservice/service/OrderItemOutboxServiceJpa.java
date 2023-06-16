@@ -1,8 +1,8 @@
 package com.example.orderservice.service;
 
-import com.example.orderdto.dto.OrderChangesPayload;
-import com.example.orderservice.domain.OrderOutbox;
-import com.example.orderservice.repository.OrderOutboxRepository;
+import com.example.orderdto.dto.OrderItemChangesPayload;
+import com.example.orderservice.domain.OrderItemOutbox;
+import com.example.orderservice.repository.OrderItemOutboxRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -17,20 +17,20 @@ import static com.example.orderservice.domain.OrderLifecycleEvent.ORDER_CREATED;
 @Service
 @AllArgsConstructor
 @Transactional
-public class OrderOutboxServiceJpa implements OrderOutboxService {
+public class OrderItemOutboxServiceJpa implements OrderItemOutboxService {
 
-    private final OrderOutboxRepository repository;
+    private final OrderItemOutboxRepository repository;
 
     private final ObjectMapper mapper;
 
     @SneakyThrows(value = JsonProcessingException.class)
     @Override
-    public void createOrderOutboxMessage(OrderChangesPayload orderChangesPayload) {
-        var orderOutbox = OrderOutbox.builder()
+    public void createOrderItemOutboxMessage(OrderItemChangesPayload orderItemChangesPayload) {
+        var orderItemOutbox = OrderItemOutbox.builder()
                 .key(UUID.randomUUID())
                 .eventType(ORDER_CREATED)
-                .payload(mapper.writeValueAsString(orderChangesPayload))
+                .payload(mapper.writeValueAsString(orderItemChangesPayload))
                 .build();
-        repository.save(orderOutbox);
+        repository.save(orderItemOutbox);
     }
 }
