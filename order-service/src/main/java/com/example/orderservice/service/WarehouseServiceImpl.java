@@ -14,7 +14,7 @@ import java.time.Duration;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PriceServiceImpl implements PriceService {
+public class WarehouseServiceImpl implements WarehouseService {
 
     private final WebClient webClient;
 
@@ -22,6 +22,17 @@ public class PriceServiceImpl implements PriceService {
     public BigDecimal getPriceByProductIdAndPriceType(Long id, PriceType priceType) {
         var priceDto = getPriceDtoByProductIdAndPriceType(id, priceType);
         return priceDto.getValue();
+    }
+
+    @Override
+    public BigDecimal getLeftoverByProductId(Long productId) {
+        return webClient
+                .get()
+                .uri(String.join("", "http://localhost:8085/api/v1/product/id/", productId.toString(), "/leftovervalue"))
+                .retrieve()
+                .bodyToMono(BigDecimal.class)
+                .retryWhen(Retry.fixedDelay(3, Duration.ofMillis(100)))
+                .block();
     }
 
     private PriceDto getPriceDtoByProductIdAndPriceType(Long id, PriceType priceType){
